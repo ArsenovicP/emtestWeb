@@ -104,14 +104,14 @@
                         var parsedJson=$.parseJSON(data);
 
 
-                        for (var i = 0; i < data.length; i++)
+                        for (myObj in parsedJson)
                         {
                                 var temp = '<tr';
-                                if (parsedJson[i].rychlost < 50){
+                                if (myObj[rychlost] < 50){
                                     temp += ' style="background-color: #7dd162;"';
                                     pocet50++;
                                 }
-                                else if (parsedJson[i].rychlost >= 50 & parsedJson[i].rychlost < 80){
+                                else if (myObj[rychlost] >= 50 & myObj[rychlost] < 80){
 
                                     temp += ' style="background-color: #ffbf51;"';
                                     pocet80++;
@@ -123,9 +123,9 @@
 
                                 }
 
-                                temp += '><td>' + parsedJson[i].ID + '</td>';
-                                temp += '<td>' + parsedJson[i].nazov + '</td>';
-                                temp += '<td>' + parsedJson[i].rychlost + '</td></tr>';
+                                temp += '><td>' + myObj[ID] + '</td>';
+                                temp += '<td>' + myObj[nazov] + '</td>';
+                                temp += '<td>' + myObj[rychlost] + '</td></tr>';
                                 $("table tbody").append(temp);
 
                         };
