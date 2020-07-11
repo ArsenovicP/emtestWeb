@@ -23,6 +23,9 @@
 
             <div class="col-sm-3">
                 <input type="number" id="count" name="count" class="form-control">
+                <div class="invalid-feedback">
+                    Počet musí byť od 100 do 500
+                </div>
             </div>
             <div class="col-sm-2">
                 <button class="btn btn-success" id="button">Generovať</button>
@@ -31,18 +34,64 @@
         </div>
         <div class="row">
             <div id="result">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nazov</th>
+                            <th>Rychlost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
             </div>
         </div>
 
     </div>
         <script>
             $(document).ready(function(){
+
+                $("button").hide();
+                $(".invalid-feedback").hide();
+
+                $("#count").change(function () {
+                    if ($("#count").val()<100 | $("#count").val()>500){
+                        $("button").hide();
+                        $("#count").addClass("is-invalid");
+                        $("#count").removeClass("is-valid");
+                        $(".invalid-feedback").show();
+                    }
+                    else {
+                        $("button").show();
+                        $("#count").addClass("is-valid");
+                        $("#count").removeClass("is-invalid");
+                        $(".invalid-feedback").hide();
+                    }
+                    
+                })
+
+
                 $("button").click(function(){
 
 
                     $.post("script.php", {count: $('#count').val()} , function(data){
+                       /* for (var i = 0; i < data.length; ++i)
+                        {
+                          $("tbody").append(
+                              "<tr><td>"+data[i]["ID"]+"</td><td>TEST2</td></tr>"
+                          )
+                        }*/
+                        var parsedJson=$.parseJSON(data);
 
-                        $("#result").html(data);
+                        for (var i = 0; i < data.length; i++)
+                        {
+                                var temp = '<tr><td>' + parsedJson[i].ID + '</td>';
+                                temp += '<td>' + parsedJson[i].nazov + '</td>';
+                                temp += '<td>' + parsedJson[i].rychlost + '</td></tr>';
+                                $("table tbody").append(temp);
+                        }
                     });
                 });
             });
