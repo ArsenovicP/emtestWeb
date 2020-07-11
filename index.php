@@ -18,7 +18,7 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
 
     </head>
-    
+
     <body>
     <div class="container">
 
@@ -37,9 +37,10 @@
             </div>
 
         </div>
-        <div class="row">
+        <div class="row mt-5">
+            <div class="col-sm-12">
             <div id="result">
-                <table class="table table-striped">
+                <table class="table table-striped" id="table">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -52,6 +53,9 @@
                     </tbody>
                 </table>
             </div>
+            </div>
+        </div>
+        <div class="row" id="stats">
         </div>
 
     </div>
@@ -78,26 +82,58 @@
                 })
 
 
+                $(document).ready( function () {
+                    $('#table').DataTable({
+                        "paging":   false,
+                        "ordering": false,
+                        "info":     false
+                    });
+
+                } );
+
+
                 $("button").click(function(){
 
 
+                    var pocet50 = 0,
+                        pocet80 = 0,
+                        pocetnad80 = 0;
+
                     $.post("script.php", {count: $('#count').val()} , function(data){
-                       /* for (var i = 0; i < data.length; ++i)
-                        {
-                          $("tbody").append(
-                              "<tr><td>"+data[i]["ID"]+"</td><td>TEST2</td></tr>"
-                          )
-                        }*/
+
                         var parsedJson=$.parseJSON(data);
+
 
                         for (var i = 0; i < data.length; i++)
                         {
-                                var temp = '<tr><td>' + parsedJson[i].ID + '</td>';
+                                var temp = '<tr';
+                                if (parsedJson[i].rychlost < 50){
+                                    temp += ' style="background-color: #7dd162;"';
+                                    pocet50++;
+                                }
+                                else if (parsedJson[i].rychlost >= 50 & parsedJson[i].rychlost < 80){
+
+                                    temp += ' style="background-color: #ffbf51;"';
+                                    pocet80++;
+                                }
+                                else {
+
+                                    temp += ' style="background-color: #ff5b5b;"';
+                                    pocetnad80++;
+
+                                }
+
+                                temp += '><td>' + parsedJson[i].ID + '</td>';
                                 temp += '<td>' + parsedJson[i].nazov + '</td>';
                                 temp += '<td>' + parsedJson[i].rychlost + '</td></tr>';
                                 $("table tbody").append(temp);
-                        }
+
+                        };
+
+
+
                     });
+
                 });
             });
         </script>
